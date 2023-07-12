@@ -8,51 +8,36 @@ import '../utilities/constants.dart';
 
 class LocationScreen extends StatefulWidget {
   final weatherData;
-  const LocationScreen({super.key, this.weatherData});
+  const LocationScreen({super.key, required this.weatherData});
 
   @override
   LocationScreenState createState() => LocationScreenState();
 }
 
 class LocationScreenState extends State<LocationScreen> {
-  ImageProvider networkImage =
-      const NetworkImage('https://source.unsplash.com/random/?cloud');
+  final WeatherModel _weatherModel = WeatherModel();
 
-  ImageProvider assetImage = const AssetImage('images/location_background.jpg');
-
-  bool doneLoading = false;
-
-  WeatherModel weather = WeatherModel();
-
-  num temp = 0;
-  int condition = 0;
-  String description = 'there is no weather data';
+  double temp = 0;
+  String description = 'Not Found';
   late String cityName = '';
-  late String icon = 'Error';
+  late String icon = '';
+  int weatherId = 0;
 
-  void updateUi(var wData) {
+  void infoWeather(var weatherInfo) {
     setState(() {
-      if (wData != null) {
-        temp = wData['main']['temp'];
-        condition = wData['weather'][0]['id'];
-        cityName = wData['name'];
-        description = weather.getMessage(temp.toInt());
-        icon = weather.getWeatherIcon(condition);
+      if (weatherInfo != null) {
+        temp = weatherInfo['main']['temp'];
+        cityName = weatherInfo['name'];
+        description = _weatherModel.getMessage(temp.toInt());
+        weatherId = weatherInfo['weather'][0]['id'];
+        icon = _weatherModel.getWeatherIcon(weatherId);
       }
     });
   }
 
   @override
   void initState() {
-    networkImage
-        .resolve(ImageConfiguration())
-        .addListener(ImageStreamListener((_, __) {
-      setState(() {
-        doneLoading = true;
-      });
-    }));
-
-    updateUi(widget.weatherData);
+    infoWeather(widget.weatherData);
     super.initState();
   }
 
@@ -62,136 +47,134 @@ class LocationScreenState extends State<LocationScreen> {
       body: Stack(
         children: [
           Container(
-            constraints: const BoxConstraints.expand(),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: assetImage,
+                image: const NetworkImage(networkImageLink),
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                     Colors.white.withOpacity(0.8), BlendMode.dstATop),
               ),
             ),
-          ),
-          AnimatedOpacity(
-            opacity: doneLoading ? 1 : 0,
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-            child: Container(
-              constraints: const BoxConstraints.expand(),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: networkImage,
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.white.withOpacity(0.8),
-                    BlendMode.dstATop,
-                  ),
+            constraints: const BoxConstraints.expand(),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    Colors.white.withOpacity(0.0),
+                    Colors.white.withOpacity(0.0)
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                 ),
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        updateUi(widget.weatherData);
-                      },
-                      child: const Icon(
-                        Icons.near_me,
-                        size: 50.0,
-                        color: kSecondaryColor,
+          const SizedBox(
+            height: 50,
+          ),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          infoWeather(widget.weatherData);
+                        },
+                        child: const Icon(
+                          Icons.near_me,
+                          size: 50.0,
+                          color: kSecondaryColor,
+                        ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        var result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CityScreen(),
+                      TextButton(
+                        onPressed: () async {
+                          var result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CityScreen(),
+                            ),
+                          );
+                          infoWeather(result);
+                        },
+                        child: const Icon(
+                          Icons.location_city,
+                          size: 50.0,
+                          color: kSecondaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        icon,
+                        style: kTempTextStyle,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            '${temp.toInt()}',
+                            style: kTempTextStyle,
                           ),
-                        );
-                        updateUi(result);
-                      },
-                      child: const Icon(
-                        Icons.location_city,
-                        size: 50.0,
-                        color: kSecondaryColor,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 35,
+                                height: 35,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black, width: 10),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                height: 7,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(10)
+                                    // shape: BoxShape.circle,
+                                    ),
+                              ),
+                              const Text(
+                                'now',
+                                style: TextStyle(
+                                  fontSize: 30.0,
+                                  fontFamily: 'Spartan MB',
+                                  letterSpacing: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 24.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      icon,
-                      style: kTempTextStyle,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text(
-                          '${temp.round()}',
-                          style: kTempTextStyle,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.white, width: 10),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              height: 7,
-                              width: 35,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)
-                                  // shape: BoxShape.circle,
-                                  ),
-                            ),
-                            const Text(
-                              'now',
-                              style: TextStyle(
-                                fontSize: 30.0,
-                                fontFamily: 'Spartan MB',
-                                letterSpacing: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 24.0, bottom: 120),
+                  child: Text(
+                    '$description in $cityName',
+                    textAlign: TextAlign.right,
+                    style: kMessageTextStyle,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 24.0, bottom: 24),
-                child: Text(
-                  '$description in $cityName',
-                  textAlign: TextAlign.right,
-                  style: kMessageTextStyle,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

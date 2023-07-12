@@ -9,6 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
         primaryColor: Color(0xff131410),
       ),
@@ -16,3 +17,34 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// final myController = TextEditingController();
+// void changeValue() {
+//   setState(() {
+//     cityName = myController.text;
+//   });
+// }
+
+// @override
+// void initState() {
+//   myController.addListener(() {
+//     changeValue();
+//   });
+//   super.initState();
+// }
+//
+// @override
+// void dispose() {
+//   myController.dispose();
+//   super.dispose();
+// }
+//
+// void _updateCityName(String value) {
+//   if (!myController.selection.isValid ||
+//       !myController.selection.isCollapsed) {
+//     // Only update the city name if the cursor is not in focus or the user is not actively typing
+//     setState(() {
+//       cityName = value;
+//       print(cityName);
+//     });
+//   }
+// }

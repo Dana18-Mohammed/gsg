@@ -18,7 +18,7 @@ class CityScreenState extends State<CityScreen> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('images/city_background.jpg'),
+            image: assetImg,
             fit: BoxFit.cover,
           ),
         ),
@@ -39,27 +39,42 @@ class CityScreenState extends State<CityScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
-                  onChanged: (value) {
-                    cityName = value;
-                    print(value);
-                  },
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.location_city),
-                    hintText: 'Enter City Name',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        borderSide: BorderSide.none),
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextFormField(
+                    onChanged: (value) {
+                      cityName = value;
+                      print(cityName);
+                    },
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.location_city),
+                      hintText: 'Enter City Name',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide.none),
+                    ),
+                  )
+                  // TextField(
+                  //   onChanged: (value) {
+                  //     cityName = value;
+                  //     print(cityName);
+                  //   },
+                  //   decoration: InputDecoration(
+                  //     icon: Icon(Icons.location_city),
+                  //     hintText: 'Enter City Name',
+                  //     filled: true,
+                  //     fillColor: Colors.white,
+                  //     border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(5),
+                  //         borderSide: BorderSide.none),
+                  //   ),
+                  // ),
                   ),
-                ),
-              ),
               TextButton(
                 onPressed: () async {
                   var weatherData =
-                      await NetworkHelper().getDataByCityName(cityName!);
+                      await NetworkHelper().getWeatherDataByCityName(cityName!);
                   Navigator.pop(context, weatherData);
                 },
                 child: const Text(

@@ -20,3 +20,16 @@ const kConditionTextStyle = TextStyle(
   fontSize: 100.0,
 );
 const kSecondaryColor = Color(0xff74cace);
+
+const MessageTextStyle =
+    TextStyle(fontFamily: 'Spartan MB', fontSize: 50.0, color: Colors.black);
+
+const degreeTextStyle = TextStyle(
+    fontFamily: 'Spartan MB',
+    fontSize: 100.0,
+    letterSpacing: 14,
+    color: Colors.black);
+
+const networkImageLink = 'https://source.unsplash.com/random/?nature,day';
+const assetImg = AssetImage('images/city_background.jpg');
+const apiKey = 'f716a43596a928023a827e6beeb88596';
