@@ -1,4 +1,0 @@
-#Tue Jul 18 18:23:43 EET 2023
-base.0=F\:\\ttd\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
