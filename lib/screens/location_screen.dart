@@ -16,6 +16,8 @@ class LocationScreen extends StatefulWidget {
 
 class LocationScreenState extends State<LocationScreen> {
   final WeatherModel _weatherModel = WeatherModel();
+  ImageProvider assetImage = const AssetImage('images/location_background.jpg');
+  ImageProvider networkImage = const NetworkImage(networkImageLink);
 
   double temp = 0;
   String description = 'Not Found';
@@ -28,6 +30,7 @@ class LocationScreenState extends State<LocationScreen> {
       if (weatherInfo != null) {
         temp = weatherInfo['main']['temp'];
         cityName = weatherInfo['name'];
+        // description = weatherInfo['weather'][0]['id'];
         description = _weatherModel.getMessage(temp.toInt());
         weatherId = weatherInfo['weather'][0]['id'];
         icon = _weatherModel.getWeatherIcon(weatherId);
@@ -35,9 +38,22 @@ class LocationScreenState extends State<LocationScreen> {
     });
   }
 
+  bool isLoade = false;
+  void getImageProvide() {
+    networkImage
+        .resolve(const ImageConfiguration())
+        .addListener(ImageStreamListener((_, __) {
+      setState(() {
+        isLoade = true;
+      });
+    }));
+  }
+
   @override
   void initState() {
     infoWeather(widget.weatherData);
+
+    getImageProvide();
     super.initState();
   }
 
@@ -49,7 +65,7 @@ class LocationScreenState extends State<LocationScreen> {
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: const NetworkImage(networkImageLink),
+                image: !isLoade ? assetImage : networkImage,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                     Colors.white.withOpacity(0.8), BlendMode.dstATop),
@@ -57,19 +73,16 @@ class LocationScreenState extends State<LocationScreen> {
             ),
             constraints: const BoxConstraints.expand(),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+              filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
               child: Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
-                    Colors.white.withOpacity(0.0),
-                    Colors.white.withOpacity(0.0)
+                    Colors.white.withOpacity(0.2),
+                    Colors.white.withOpacity(0.2)
                   ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            height: 50,
           ),
           SingleChildScrollView(
             child: Column(
@@ -108,6 +121,9 @@ class LocationScreenState extends State<LocationScreen> {
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 100,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 24.0),
@@ -164,6 +180,9 @@ class LocationScreenState extends State<LocationScreen> {
                       ),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  height: 18,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 24.0, bottom: 120),

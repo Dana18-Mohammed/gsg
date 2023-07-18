@@ -12,6 +12,7 @@ class CityScreen extends StatefulWidget {
 
 class CityScreenState extends State<CityScreen> {
   String? cityName;
+  late TextEditingController mycontroller;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
