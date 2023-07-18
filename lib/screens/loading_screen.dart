@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/screens/location_screen.dart';
 import 'package:weather_app/services/weather.dart';
 
+import 'animated_screen.dart';
+
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
 
@@ -28,6 +30,6 @@ class LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    return Scaffold(body: Center(child: AnimatedRotationImage()));
   }
 }

@@ -11,10 +11,7 @@ const kMessageTextStyle = TextStyle(
   fontSize: 60.0,
 );
 
-const kButtonTextStyle = TextStyle(
-  fontSize: 30.0,
-  fontFamily: 'Spartan MB',
-);
+const kButtonTextStyle = TextStyle(fontSize: 30.0, fontFamily: 'Spartan MB');
 
 const kConditionTextStyle = TextStyle(
   fontSize: 100.0,
@@ -31,5 +28,6 @@ const degreeTextStyle = TextStyle(
     color: Colors.black);
 
 const networkImageLink = 'https://source.unsplash.com/random/?nature,day';
-const assetImg = AssetImage('images/city_background.jpg');
+const assetImg = AssetImage('images/earth_city.gif');
 const apiKey = 'f716a43596a928023a827e6beeb88596';
+const primaryColor = Color(0xff131410);

@@ -30,7 +30,6 @@ class LocationScreenState extends State<LocationScreen> {
       if (weatherInfo != null) {
         temp = weatherInfo['main']['temp'];
         cityName = weatherInfo['name'];
-        // description = weatherInfo['weather'][0]['id'];
         description = _weatherModel.getMessage(temp.toInt());
         weatherId = weatherInfo['weather'][0]['id'];
         icon = _weatherModel.getWeatherIcon(weatherId);

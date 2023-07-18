@@ -12,7 +12,7 @@ class CityScreen extends StatefulWidget {
 
 class CityScreenState extends State<CityScreen> {
   String? cityName;
-  late TextEditingController mycontroller;
+  bool onTap = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +20,8 @@ class CityScreenState extends State<CityScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: assetImg,
-            fit: BoxFit.cover,
+
+            // fit: BoxFit.cover,
           ),
         ),
         constraints: const BoxConstraints.expand(),
@@ -43,11 +44,13 @@ class CityScreenState extends State<CityScreen> {
                   padding: const EdgeInsets.all(20.0),
                   child: TextFormField(
                     onChanged: (value) {
+                      setState(() {
+                        onTap = true;
+                      });
                       cityName = value;
-                      print(cityName);
                     },
                     decoration: InputDecoration(
-                      icon: Icon(Icons.location_city),
+                      icon: const Icon(Icons.location_city),
                       hintText: 'Enter City Name',
                       filled: true,
                       fillColor: Colors.white,
@@ -55,32 +58,21 @@ class CityScreenState extends State<CityScreen> {
                           borderRadius: BorderRadius.circular(5),
                           borderSide: BorderSide.none),
                     ),
-                  )
-                  // TextField(
-                  //   onChanged: (value) {
-                  //     cityName = value;
-                  //     print(cityName);
-                  //   },
-                  //   decoration: InputDecoration(
-                  //     icon: Icon(Icons.location_city),
-                  //     hintText: 'Enter City Name',
-                  //     filled: true,
-                  //     fillColor: Colors.white,
-                  //     border: OutlineInputBorder(
-                  //         borderRadius: BorderRadius.circular(5),
-                  //         borderSide: BorderSide.none),
-                  //   ),
-                  // ),
-                  ),
+                  )),
               TextButton(
                 onPressed: () async {
                   var weatherData =
                       await NetworkHelper().getWeatherDataByCityName(cityName!);
-                  Navigator.pop(context, weatherData);
+                  if (mounted) {
+                    Navigator.pop(context, weatherData);
+                  }
                 },
-                child: const Text(
+                child: Text(
                   'Get Weather',
-                  style: kButtonTextStyle,
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontFamily: 'Spartan MB',
+                      color: onTap ? Colors.white : Colors.blue),
                 ),
               ),
             ],
