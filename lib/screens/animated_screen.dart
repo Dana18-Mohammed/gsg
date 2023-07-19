@@ -36,3 +36,4 @@ class _AnimatedRotationImageState extends State<AnimatedRotationImage>
     );
   }
 }
+//

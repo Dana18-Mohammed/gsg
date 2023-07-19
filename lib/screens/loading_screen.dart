@@ -33,3 +33,4 @@ class LoadingScreenState extends State<LoadingScreen> {
     return Scaffold(body: Center(child: AnimatedRotationImage()));
   }
 }
+//
